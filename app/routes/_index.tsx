@@ -1,4 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Suspense } from "react";
+import MapContainer from "~/components/map/MapContainer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,6 +11,8 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div>Hello World</div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <MapContainer />
+    </Suspense>
   );
 }
