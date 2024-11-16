@@ -6,7 +6,6 @@ import {
   ReactZoomPanPinchRef,
 } from 'react-zoom-pan-pinch'
 import Map from './Map'
-import { Marker } from '~/utils/types'
 import { useWindowSize } from '~/utils/hooks'
 
 // Map Dimensions
@@ -26,14 +25,17 @@ const Controls = () => {
   )
 }
 
-type Props = {
-}
+type Props = {}
 
 const MapContainer: React.FC<Props> = () => {
-  const ref = useRef<ReactZoomPanPinchRef>(null);
+  const ref = useRef<ReactZoomPanPinchRef>(null)
 
-  const [windowWidth, windowHeight] = useWindowSize();
-  const [scaleBounds, setScaleBounds] = useState({ init: 1.5, min: 0.5, max: 2 })
+  const [windowWidth, windowHeight] = useWindowSize()
+  const [scaleBounds, setScaleBounds] = useState({
+    init: 1.5,
+    min: 0.5,
+    max: 2,
+  })
 
   const updateBounds = () => {
     const scaleY = windowHeight / HEIGHT
@@ -46,7 +48,7 @@ const MapContainer: React.FC<Props> = () => {
   useEffect(() => updateBounds(), [windowHeight, windowWidth])
 
   return (
-  <TransformWrapper
+    <TransformWrapper
       ref={ref}
       initialScale={1.5}
       centerOnInit={true}
