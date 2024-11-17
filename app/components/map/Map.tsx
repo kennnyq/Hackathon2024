@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTransformEffect, useTransformInit } from 'react-zoom-pan-pinch'
 import { MarkerInfo } from '~/utils/types'
 import Marker from './Marker'
@@ -11,6 +11,8 @@ type Props = {
 }
 
 const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
+  const [scale, setScale] = useState(1)
+
   useTransformInit(({ instance }) => {
     const element = instance.contentComponent
     const wrapper = instance.contentComponent?.parentElement
@@ -23,6 +25,7 @@ const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
   })
 
   useTransformEffect(({ state, instance }) => {
+    setScale(state.scale)
     setSwitcherActive(false)
   })
 
@@ -37,6 +40,7 @@ const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
         color={val.color}
         x={val.x}
         y={val.y}
+        scale={scale}
       />
     )
   })
