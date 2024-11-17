@@ -9,9 +9,13 @@ import { useWindowSize } from '~/utils/hooks'
 import { Color } from '~/utils/types'
 import { MarkerLocations } from '~/utils/marker_locations'
 import ColorSwitcher from '~/components/ColorSwitcher'
+<<<<<<< Updated upstream
 import DropUpButton from '~/components/DropUpButton'
 import { uuidv4 } from '~/utils/utils'
 import { useLoaderData } from '@remix-run/react'
+=======
+import PopUp from '~/components/PopUp'
+>>>>>>> Stashed changes
 
 export const meta: MetaFunction = () => {
   return [
@@ -38,6 +42,7 @@ export default function Index() {
   // useEffect(() => {}, [lotName])
 
   return (
+<<<<<<< Updated upstream
     <Suspense fallback={<div>Loading...</div>}>
       <ColorSwitcher
         color={color}
@@ -73,6 +78,29 @@ export default function Index() {
       )}
       <DropUpButton pageType="home" />
     </Suspense>
+=======
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ColorSwitcher
+          color={color}
+          switcherActive={switcherActive}
+          setColor={setColor}
+          setSwitcherActive={setSwitcherActive}
+          />
+        <MapContainer
+          color={color}
+          markers={MarkerLocations}
+          setSwitcherActive={setSwitcherActive}
+          />
+        {isDesktop || largeViewport ? (
+          <SidebarContainerDesktop />
+        ) : (
+          <SidebarContainerMobile />
+        )}
+        <PopUp />
+      </Suspense>
+    </div>
+>>>>>>> Stashed changes
   )
 }
 

@@ -25,8 +25,13 @@ const Marker: React.FC<Props> = ({ active, color, x, y, scale, onClick }) => {
       <div
         className="bg-white flex items-center justify-center rounded-full"
         style={{
+<<<<<<< Updated upstream
           height: (24 * 1) / scale,
           width: (24 * 1) / scale,
+=======
+          height: 24 * (1 / scale) * (1 + 0.1 * Math.pow(scale - 1, 2)),
+          width: 24 * (1 / scale) * (1 + 0.1 * Math.pow(scale - 1, 2))
+>>>>>>> Stashed changes
         }}
       >
         <div className="bg-blue-500 rounded-full h-2/3 w-2/3" />

@@ -38,7 +38,7 @@ const ImageContainer = () => {
       <div className="mt-2">
         <div className="w-full aspect-w-16 aspect-h-9">
           <img
-            src={item.image}
+            // src={item.image}
             alt="Review"
             className="object-cover rounded-md"
           />
