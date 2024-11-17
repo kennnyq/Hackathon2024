@@ -1,97 +1,107 @@
-import React from 'react';
+// app/routes/BadParking.jsx
+import { useState } from "react";
+import DropUpButton from '~/components/DropUpButton'; // Import the DropUpButton
 
-const CometsCantPark = () => {
-  const posts = [
+export default function BadParking() {
+  // Initialize state with sample posts
+  const [posts, setPosts] = useState([
     {
-      date: '2023-10-01',
-      image: 'https://source.unsplash.com/random/800x600?car',
+      id: 1,
+      imageUrl: "https://via.placeholder.com/600x400?text=First+Post",
+      date: "2024-04-25",
     },
     {
-      date: '2023-10-02',
-      image: 'https://source.unsplash.com/random/800x600?parking',
+      id: 2,
+      imageUrl: "https://via.placeholder.com/600x400?text=Second+Post",
+      date: "2024-04-26",
     },
-    {
-      date: '2023-10-03',
-      image: 'https://source.unsplash.com/random/800x600?traffic',
-    },
-    {
-      date: '2023-10-04',
-      image: 'https://source.unsplash.com/random/800x600?city',
-    },
-    {
-      date: '2023-10-05',
-      image: 'https://source.unsplash.com/random/800x600?street',
-    },
-    {
-      date: '2023-10-06',
-      image: 'https://source.unsplash.com/random/800x600?road',
-    },
-    {
-      date: '2023-10-07',
-      image: 'https://source.unsplash.com/random/800x600?vehicle',
-    },
-    {
-      date: '2023-10-08',
-      image: 'https://source.unsplash.com/random/800x600?accident',
-    },
-    {
-      date: '2023-10-09',
-      image: 'https://source.unsplash.com/random/800x600?sign',
-    },
-    {
-      date: '2023-10-10',
-      image: 'https://source.unsplash.com/random/800x600?map',
-    },
-    {
-      date: '2023-10-11',
-      image: 'https://source.unsplash.com/random/800x600?navigation',
-    },
-    {
-      date: '2023-10-12',
-      image: 'https://source.unsplash.com/random/800x600?gps',
-    },
-    // Add more posts as needed
-  ];
+    // Add more initial posts as needed
+  ]);
 
-  const placeholderImage =
-    'https://via.placeholder.com/800x600?text=No+Image+Available';
+  // Handler to add a new post
+  const addPost = (imageUrl) => {
+    const newPost = {
+      id: posts.length + 1,
+      imageUrl,
+      date: new Date().toISOString(),
+    };
+    setPosts([newPost, ...posts]);
+  };
 
-  const PostItems = posts.map((post, index) => (
-    <div
-      key={index}
-      className="bg-white m-4 rounded-lg shadow-lg w-full max-w-2xl overflow-hidden"
-    >
-      {/* Date Section */}
-      <div className="bg-gray-200 p-4">
-        <div className="text-gray-700 text-sm font-medium">
-          {new Date(post.date).toLocaleDateString()}
-        </div>
-      </div>
-      {/* Image Section */}
-      <div className="w-full">
-        <img
-          src={post.image}
-          alt="Post"
-          className="object-cover w-full h-80"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = placeholderImage;
-          }}
-        />
-      </div>
-    </div>
-  ));
+  // Handler for form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const file = form.imageFile.files[0];
+
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        addPost(reader.result);
+        form.reset();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid image file.");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-6">
-      <header className="text-5xl font-bold text-gray-800 mb-8">
-        Comets Can't Park
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <header className="bg-orange-500 text-white py-4">
+        <h1 className="text-center text-3xl font-bold">Comets Can't Park</h1>
       </header>
-      <div className="w-full flex flex-col items-center">
-        {PostItems}
-      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 p-4 max-w-4xl mx-auto w-full">
+        {/* Add Post Form */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-orange-500">Add a New Post</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            {/* Image File Input */}
+            <input
+              type="file"
+              name="imageFile"
+              accept="image/*"
+              required
+              className="flex-1 p-2 border border-orange-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-colors"
+            >
+              Add Post
+            </button>
+          </form>
+        </div>
+
+        {/* Feed */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col"
+            >
+              <img
+                src={post.imageUrl}
+                alt={`Post ${post.id}`}
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-4 bg-orange-500 text-white text-sm mt-auto">
+                {new Date(post.date).toLocaleDateString()}
+              </div>
+            </div>
+          ))}
+        </div>
+        <DropUpButton pageType="aboutUs" /> {/* Add the DropUpButton here */}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-orange-500 text-white py-4 mt-8">
+        <p className="text-center">&copy; {new Date().getFullYear()} Comets Can't Park</p>
+      </footer>
     </div>
   );
-};
-
-export default CometsCantPark;
+}

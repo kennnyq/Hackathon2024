@@ -41,7 +41,7 @@ const DropUpButton = ({ pageType }: any) => {
 
   return (
     <div
-      className={`fixed right-5 z-50 ${pageType === 'aboutUs' ? 'bottom-14' : 'bottom-5'}`}
+      className={`fixed right-5 z-50 ${pageType === 'aboutUs' ? 'bottom-16' : 'bottom-5'}`}
       ref={menuRef}
     >
       <button
