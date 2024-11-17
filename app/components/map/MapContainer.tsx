@@ -7,6 +7,7 @@ import {
 } from 'react-zoom-pan-pinch'
 import Map from './Map'
 import { useWindowSize } from '~/utils/hooks'
+import { MarkerInfo } from '~/utils/types'
 
 // Map Dimensions
 const WIDTH = 816
@@ -25,9 +26,17 @@ const Controls = () => {
   )
 }
 
-type Props = {}
+type Props = {
+  color: string
+  markers: MarkerInfo[]
+  setSwitcherActive: (show: boolean) => void
+}
 
-const MapContainer: React.FC<Props> = () => {
+const MapContainer: React.FC<Props> = ({
+  color,
+  markers,
+  setSwitcherActive,
+}) => {
   const ref = useRef<ReactZoomPanPinchRef>(null)
 
   const [windowWidth, windowHeight] = useWindowSize()
@@ -64,7 +73,11 @@ const MapContainer: React.FC<Props> = () => {
         <>
           {/* <Controls /> */}
           <TransformComponent>
-            <Map />
+            <Map
+              color={color}
+              markers={markers}
+              setSwitcherActive={setSwitcherActive}
+            />
           </TransformComponent>
         </>
       )}

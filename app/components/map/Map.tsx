@@ -1,9 +1,16 @@
 import React from 'react'
-import { useTransformInit } from 'react-zoom-pan-pinch'
+import { useTransformEffect, useTransformInit } from 'react-zoom-pan-pinch'
+import { MarkerInfo } from '~/utils/types'
+import Marker from './Marker'
+import { kebabCase } from '~/utils/utils'
 
-type Props = {}
+type Props = {
+  color: string
+  markers: MarkerInfo[]
+  setSwitcherActive: (show: boolean) => void
+}
 
-const Map: React.FC<Props> = () => {
+const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
   useTransformInit(({ instance }) => {
     const element = instance.contentComponent
     const wrapper = instance.contentComponent?.parentElement
@@ -15,11 +22,29 @@ const Map: React.FC<Props> = () => {
     wrapper.style.touchAction = 'auto'
   })
 
-  // Add a second image to the file
+  useTransformEffect(({ state, instance }) => {
+    setSwitcherActive(false)
+  })
+
+  const MarkerElements = markers.map((val, i) => {
+    const markerActive = val.color == color
+    const lotID = kebabCase(val.location)
+    return (
+      <Marker
+        key={i}
+        active={markerActive}
+        lotID={lotID}
+        color={val.color}
+        x={val.x}
+        y={val.y}
+      />
+    )
+  })
 
   return (
     <>
-      <img src="/Parking_Map.svg" alt="test" className="max-w-none" />
+      <img src="/Parking_Map_New (1).svg" alt="test" className="max-w-none" />
+      {MarkerElements}
     </>
   )
 }

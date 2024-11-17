@@ -1,10 +1,13 @@
-import type { MetaFunction } from '@remix-run/node'
-import { Suspense } from 'react'
+import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import { Suspense, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import MapContainer from '~/components/map/MapContainer'
 import SidebarContainerDesktop from '~/components/sidebar/SidebarDesktopContainer'
 import SidebarContainerMobile from '~/components/sidebar/SidebarMobileContainer'
 import { useWindowSize } from '~/utils/hooks'
+import { Color } from '~/utils/types'
+import { MarkerLocations } from '~/utils/marker_locations'
+import ColorSwitcher from '~/components/ColorSwitcher'
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,11 +23,22 @@ export default function Index() {
   const [windowWidth, windowHeight] = useWindowSize()
   const largeViewport = windowWidth > 768
 
-  console.log('Mobile')
+  const [switcherActive, setSwitcherActive] = useState<Boolean>(false)
+  const [color, setColor] = useState<Color>('none')
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <MapContainer />
+      <ColorSwitcher
+        color={color}
+        switcherActive={switcherActive}
+        setColor={setColor}
+        setSwitcherActive={setSwitcherActive}
+      />
+      <MapContainer
+        color={color}
+        markers={MarkerLocations}
+        setSwitcherActive={setSwitcherActive}
+      />
       {isDesktop || largeViewport ? (
         <SidebarContainerDesktop />
       ) : (
@@ -32,4 +46,11 @@ export default function Index() {
       )}
     </Suspense>
   )
+}
+
+export const loader: LoaderFunction = async ({ request, params, context }) => {
+  const slug = params.index
+
+  console.log(params)
+  return null
 }
