@@ -47,7 +47,14 @@ const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
 
   return (
     <>
-      <img src="/Parking_Map_New (1).svg" alt="test" className="max-w-none" />
+      <img
+        src="/Parking_Map_New (1).svg"
+        alt="test"
+        className="max-w-none"
+        style={{
+          boxShadow: '0 0 100px rgba(255, 255, 255, 2)',
+        }}
+      />
       {MarkerElements}
     </>
   )
