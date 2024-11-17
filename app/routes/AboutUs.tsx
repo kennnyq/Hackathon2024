@@ -9,14 +9,14 @@ const About: FC = () => {
       role: 'Lead Developer',
       description: '',
       image: '/images//kenny-headshot.jpeg',
-      education: '',
+      education: 'Genius Coder',
     },
     {
       name: 'Yash Baruah',
       role: 'Frontend Developer',
       description: '',
       image: '/images//yash-headshot.jpeg',
-      education: '',
+      education: 'Web Page Development',
     },
     {
       name: 'Sanjay Bharathi',
