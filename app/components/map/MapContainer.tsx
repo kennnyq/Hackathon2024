@@ -29,13 +29,21 @@ const Controls = () => {
 type Props = {
   color: string
   markers: MarkerInfo[]
+  sidebarTimeout: Boolean
   setSwitcherActive: (show: boolean) => void
+  setSidebarActive: (show: boolean) => void
+  setSidebarTimeout: (show: boolean) => void
+  setLotName: (set: string) => void
 }
 
 const MapContainer: React.FC<Props> = ({
   color,
   markers,
+  sidebarTimeout,
   setSwitcherActive,
+  setSidebarActive,
+  setSidebarTimeout,
+  setLotName,
 }) => {
   const ref = useRef<ReactZoomPanPinchRef>(null)
 
@@ -76,7 +84,11 @@ const MapContainer: React.FC<Props> = ({
             <Map
               color={color}
               markers={markers}
+              sidebarTimeout={sidebarTimeout}
               setSwitcherActive={setSwitcherActive}
+              setSidebarActive={setSidebarActive}
+              setSidebarTimeout={setSidebarTimeout}
+              setLotName={setLotName}
             />
           </TransformComponent>
         </>

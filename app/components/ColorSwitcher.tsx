@@ -9,6 +9,7 @@ type displayProps = {
 
 const ColorDisplay: React.FC<displayProps> = ({ color, onClick }) => {
   const colorMap: { [key in Color]: string } = {
+    none: '',
     green: '#05b050',
     gold: '#ffff00',
     orange: '#e77623',
@@ -59,7 +60,7 @@ const ColorOption: React.FC<optionProps> = ({
 
 type Props = {
   color: Color
-  switcherActive: boolean
+  switcherActive: Boolean
   setColor: (color: Color) => void
   setSwitcherActive: (show: boolean) => void
 }

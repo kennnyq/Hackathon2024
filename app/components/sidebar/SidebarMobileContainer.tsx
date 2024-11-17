@@ -1,16 +1,40 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSpring, a, config } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { useWindowSize } from '~/utils/hooks'
 import Sidebar from './Sidebar'
+import { Color } from '~/utils/types'
 
 const BUFFER = 30
 
-const SidebarContainerMobile: React.FC = () => {
+type Props = {
+  lotName: string
+  color: Color
+  sidebarActive: Boolean
+  sidebarTimeout: Boolean
+  setSidebarActive: (set: boolean) => void
+}
+
+const SidebarContainerMobile: React.FC<Props> = ({
+  lotName,
+  color,
+  sidebarActive,
+  setSidebarActive,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   const [{ y }, api] = useSpring(() => ({ y: 0 }))
   const [isDragging, setIsDragging] = useState(false)
   const [windowWidth, windowHeight] = useWindowSize()
+
+  useEffect(() => {
+    if (sidebarActive) {
+      setSidebarActive(true)
+      open(false)
+    } else {
+      setSidebarActive(false)
+      close()
+    }
+  }, [sidebarActive])
 
   const open = ({ canceled }: any) => {
     // when cancel is true, it means that the user passed the upwards threshold
@@ -39,7 +63,6 @@ const SidebarContainerMobile: React.FC = () => {
       velocity: [, vy],
       direction: [, dy],
       offset: [, oy],
-      cancel,
       canceled,
     }) => {
       // Only move when the element is near the top
@@ -83,7 +106,8 @@ const SidebarContainerMobile: React.FC = () => {
     >
       <Sidebar
         display="mobile"
-        lotName="Lot T"
+        lotName={lotName}
+        color={color}
         rating={2.6}
         ratingCount={416}
       />

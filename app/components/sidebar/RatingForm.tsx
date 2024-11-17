@@ -1,34 +1,40 @@
-import React, { useState, useRef } from 'react';
-import { Form } from '@remix-run/react';
-import StarRating from './StarRating';
+import React, { useState, useRef } from 'react'
+import { Form } from '@remix-run/react'
+import StarRating from './StarRating'
+import { Color } from '~/utils/types'
 
-const RatingForm = () => {
-  const [rating, setRating] = useState<number | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+type Props = {
+  color: Color
+  lotName: string
+}
+
+const RatingForm: React.FC<Props> = ({ color, lotName }) => {
+  const [rating, setRating] = useState<number | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDivClick = () => {
-    fileInputRef.current?.click();
-  };
+    fileInputRef.current?.click()
+  }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (file) {
-      // Display a preview of the selected image
-      const reader = new FileReader();
+      // Optionally, display a preview of the selected image
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const handleCancelImage = () => {
-    setImagePreview(null);
+    setImagePreview(null)
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Clear the file input
+      fileInputRef.current.value = '' // Clear the file input
     }
-  };
+  }
 
   return (
     <Form
@@ -38,6 +44,8 @@ const RatingForm = () => {
     >
       <h2 className="font-medium">Add a rating</h2>
       <StarRating setRating={setRating} rating={rating} size={34} />
+      <input type="hidden" name="color" value={lotName}></input>
+      <input type="hidden" name="color" value={color}></input>
       <input type="hidden" name="rating" value={rating ?? ''} />
       <input
         type="file"
@@ -84,7 +92,7 @@ const RatingForm = () => {
         Post
       </button>
     </Form>
-  );
-};
+  )
+}
 
-export default RatingForm;
+export default RatingForm
