@@ -28,7 +28,7 @@ export default function Index() {
   const [sidebarTimeout, setSidebarTimeout] = useState<Boolean>(false)
   const [sidebarActive, setSidebarActive] = useState<Boolean>(true)
   const [switcherActive, setSwitcherActive] = useState<Boolean>(false)
-  const [color, setColor] = useState<Color>('none')
+  const [color, setColor] = useState<Color>('green')
   const [lotName, setLotName] = useState<string>('none')
 
   console.log(color)
