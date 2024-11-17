@@ -1,8 +1,9 @@
 // ~/components/DropUpButton.tsx
+import { Link } from '@remix-run/react'
 import { useState, useEffect, useRef } from 'react'
-import { FaEllipsisH } from 'react-icons/fa' // Optional: Using React Icons for better visuals
+import { FaInfoCircle, FaCar, FaEnvelope, FaGithub } from 'react-icons/fa'
 
-const DropUpButton = () => {
+const DropUpButton = ({ pageType }: any) => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -10,7 +11,7 @@ const DropUpButton = () => {
     setIsOpen(!isOpen)
   }
 
-  // Close the menu when clicking outside
+  // Close the menu when clicking outside or pressing Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -39,24 +40,36 @@ const DropUpButton = () => {
   }, [isOpen])
 
   return (
-    <div className="fixed bottom-5 right-5 z-50" ref={menuRef}>
+    <div
+      className={`fixed right-5 z-50 ${pageType === 'aboutUs' ? 'bottom-14' : 'bottom-5'}`}
+      ref={menuRef}
+    >
       <button
         onClick={toggleMenu}
-        className={`w-12 h-12 bg-blue-500 text-white rounded-full flex flex-col justify-center items-center transition-transform duration-300 focus:outline-none ${
+        className={`w-14 h-14 bg-blue-500 text-white rounded-full flex flex-col justify-center items-center transition-transform duration-300 ease-in-out ${
           isOpen ? 'transform rotate-90' : ''
-        }`}
+        } focus:outline-none`}
         aria-haspopup="true"
         aria-expanded={isOpen}
         aria-controls="dropup-menu"
         aria-label="Menu"
       >
-        {/* Option 1: Using custom dots */}
-        <div className="w-1.5 h-1.5 bg-white rounded-full mb-1"></div>
-        <div className="w-1.5 h-1.5 bg-white rounded-full mb-1"></div>
-        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-
-        {/* Option 2: Using an icon (uncomment if preferred) */}
-        {/* <FaEllipsisH size={20} /> */}
+        {/* Dots arranged horizontally initially */}
+        <div
+          className={`w-1.5 h-1.5 bg-white rounded-full mb-1 transition-all duration-300 ${
+            isOpen ? 'mb-0.5 rotate-45 translate-y-1' : ''
+          }`}
+        ></div>
+        <div
+          className={`w-1.5 h-1.5 bg-white rounded-full mb-1 transition-all duration-300 ${
+            isOpen ? 'opacity-0' : ''
+          }`}
+        ></div>
+        <div
+          className={`w-1.5 h-1.5 bg-white rounded-full transition-all duration-300 ${
+            isOpen ? '-rotate-45 -translate-y-1' : ''
+          }`}
+        ></div>
       </button>
 
       {/* Menu Items */}
@@ -64,31 +77,48 @@ const DropUpButton = () => {
         <div
           id="dropup-menu"
           role="menu"
-          className="absolute bottom-16 right-0 bg-white shadow-lg rounded-lg flex flex-col animate-fadeIn"
+          className="absolute bottom-20 right-0 bg-white shadow-lg rounded-lg flex flex-col items-center space-y-2 p-2 animate-fadeIn"
         >
-          <button
-            className="px-4 py-2 text-left hover:bg-gray-100 transition focus:outline-none focus:bg-gray-200"
-            role="menuitem"
+          {/* About Us */}
+          <Link
+            to="/AboutUs"
+            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            aria-label="About Us"
           >
-            About Us
-          </button>
-          <button
-            className="px-4 py-2 text-left hover:bg-gray-100 transition focus:outline-none focus:bg-gray-200"
-            role="menuitem"
+            <FaInfoCircle size={20} className="text-blue-500" />
+          </Link>
+
+          {/* Car */}
+          <Link
+            to="/BadParking"
+            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            onClick={() => {
+              // Handle Car-related action
+            }}
+            aria-label="Car"
           >
-            Github
-          </button>
-          <button
-            className="px-4 py-2 text-left hover:bg-gray-100 transition focus:outline-none focus:bg-gray-200"
-            role="menuitem"
+            <FaCar size={20} className="text-blue-500" />
+          </Link>
+
+          {/* Contact Us */}
+          <Link
+            to="/"
+            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            aria-label="Contact Us"
           >
-            Park of Shame
-          </button>
+            <FaEnvelope size={20} className="text-blue-500" />
+          </Link>
+
+          {/* GitHub */}
           <button
-            className="px-4 py-2 text-left hover:bg-gray-100 transition focus:outline-none focus:bg-gray-200"
-            role="menuitem"
+            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            onClick={() => {
+              // Open GitHub repository in a new tab
+              window.open('https://github.com/kennnyq/Hackathon2024', '_blank')
+            }}
+            aria-label="GitHub"
           >
-            Contact Us
+            <FaGithub size={20} className="text-blue-500" />
           </button>
         </div>
       )}

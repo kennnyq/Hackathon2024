@@ -1,40 +1,37 @@
-import type { FC } from "react";
+import type { FC } from 'react'
+import DropUpButton from '~/components/DropUpButton' // Import the DropUpButton
 
 const About: FC = () => {
   const teamMembers = [
     {
-      name: "Kenny Quach",
-      role: "Frontend Developer",
-      description:
-        "",
-      image: "https://via.placeholder.com/150",
-      education: "Basically Gandalf",
+      name: 'Kenny Quach',
+      role: 'Frontend Developer',
+      description: '',
+      image: 'https://via.placeholder.com/150',
+      education: 'Basically Gandalf',
     },
     {
-      name: "Yash Baruah",
-      role: "Backend Developer",
-      description:
-        "",
-      image: "https://via.placeholder.com/150",
-      education: "Did some stuff",
+      name: 'Yash Baruah',
+      role: 'Backend Developer',
+      description: '',
+      image: 'https://via.placeholder.com/150',
+      education: 'Did some stuff',
     },
     {
-      name: "Sanjay Bharathi",
-      role: "UI/UX Designer",
-      description:
-        "",
-      image: "https://via.placeholder.com/150",
-      education: "Map Maker",
+      name: 'Sanjay Bharathi',
+      role: 'UI/UX Designer',
+      description: '',
+      image: 'https://via.placeholder.com/150',
+      education: 'Map Maker',
     },
     {
-      name: "Saarim Syed",
-      role: "Team Coordinator",
-      description:
-        "",
-      image: "https://via.placeholder.com/150",
-      education: "Homework Doer",
+      name: 'Saarim Syed',
+      role: 'Team Coordinator',
+      description: '',
+      image: 'https://via.placeholder.com/150',
+      education: 'Homework Doer',
     },
-  ];
+  ]
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-800 overflow-y-auto">
@@ -52,7 +49,6 @@ const About: FC = () => {
           </p>
         </div>
       </section>
-
       {/* Team Section */}
       <section className="py-16 px-6 md:px-20">
         <h2 className="text-3xl font-semibold text-orange-600 text-center mb-10">
@@ -83,15 +79,15 @@ const About: FC = () => {
           ))}
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-4">
         <p className="text-center text-sm">
           &copy; 2024 CometPark. All Rights Reserved.
         </p>
       </footer>
+      <DropUpButton pageType="aboutUs" /> {/* Add the DropUpButton here */}
     </main>
-  );
-};
+  )
+}
 
-export default About;
+export default About

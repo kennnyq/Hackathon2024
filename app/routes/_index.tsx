@@ -68,14 +68,7 @@ export default function Index() {
           setSidebarActive={setSidebarActive}
         />
       )}
-      <DropUpButton /> {/* Add the DropUpButton here */}
+      <DropUpButton pageType="home" /> {/* Add the DropUpButton here */}
     </Suspense>
   )
-}
-
-export const loader: LoaderFunction = async ({ request, params, context }) => {
-  const slug = params.index
-
-  console.log(params)
-  return null
 }
