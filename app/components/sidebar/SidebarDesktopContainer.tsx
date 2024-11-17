@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSpring, a, config } from '@react-spring/web'
 import Sidebar from './Sidebar'
-import { Color } from '~/utils/types'
+import { Color, Review } from '~/utils/types'
 import { composeEventHandlers } from '@remix-run/react/dist/components'
 
 const WIDTH = 400
@@ -9,6 +9,9 @@ const WIDTH = 400
 type Props = {
   lotName: string
   color: Color
+  rating: number
+  count: number
+  reviews: Review[]
   sidebarActive: Boolean
   sidebarTimeout: Boolean
   setSidebarActive: (set: boolean) => void
@@ -17,6 +20,9 @@ type Props = {
 const SidebarContainerDesktop: React.FC<Props> = ({
   lotName,
   color,
+  rating,
+  count,
+  reviews,
   sidebarActive,
   setSidebarActive,
 }) => {
@@ -44,6 +50,7 @@ const SidebarContainerDesktop: React.FC<Props> = ({
   }
 
   const close = () => {
+    ratingFormRef.current?.cancelRating()
     api.start({
       x: -WIDTH,
       immediate: false,
@@ -53,6 +60,8 @@ const SidebarContainerDesktop: React.FC<Props> = ({
       },
     })
   }
+
+  const ratingFormRef = useRef<{ cancelRating: () => void }>(null)
 
   return (
     <a.div
@@ -64,11 +73,13 @@ const SidebarContainerDesktop: React.FC<Props> = ({
       }}
     >
       <Sidebar
+        ref={ratingFormRef}
         display="desktop"
         lotName={lotName}
         color={color}
-        rating={2.6}
-        ratingCount={416}
+        rating={rating}
+        reviews={reviews}
+        ratingCount={count}
       />
     </a.div>
   )

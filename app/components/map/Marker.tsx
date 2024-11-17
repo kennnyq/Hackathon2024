@@ -13,10 +13,10 @@ type Props = {
 const Marker: React.FC<Props> = ({ active, color, x, y, scale, onClick }) => {
   return (
     <div
-      className="absolute flex items-center justify-center cursor-pointer"
+      className="absolute flex items-center justify-center cursor-pointer py-3 px-3"
       style={{
-        top: y + 30,
-        left: x + 30,
+        top: y + 12,
+        left: x + 12,
         visibility: active ? 'visible' : 'hidden',
         // height:
       }}
@@ -27,9 +27,10 @@ const Marker: React.FC<Props> = ({ active, color, x, y, scale, onClick }) => {
         style={{
           height: (24 * 1) / scale,
           width: (24 * 1) / scale,
+          boxShadow: `0 0 20px ${color}`,
         }}
       >
-        <div className="bg-blue-500 rounded-full h-2/3 w-2/3" />
+        <div className={`bg-[${color}] rounded-full h-2/3 w-2/3`} />
       </div>
     </div>
   )

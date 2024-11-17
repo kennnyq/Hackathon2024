@@ -3,13 +3,16 @@ import { useSpring, a, config } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { useWindowSize } from '~/utils/hooks'
 import Sidebar from './Sidebar'
-import { Color } from '~/utils/types'
+import { Color, Review } from '~/utils/types'
 
 const BUFFER = 30
 
 type Props = {
   lotName: string
   color: Color
+  rating: number
+  count: number
+  reviews: Review[]
   sidebarActive: Boolean
   sidebarTimeout: Boolean
   setSidebarActive: (set: boolean) => void
@@ -18,6 +21,9 @@ type Props = {
 const SidebarContainerMobile: React.FC<Props> = ({
   lotName,
   color,
+  rating,
+  count,
+  reviews,
   sidebarActive,
   setSidebarActive,
 }) => {
@@ -48,6 +54,7 @@ const SidebarContainerMobile: React.FC<Props> = ({
   }
 
   const close = (velocity = 0) => {
+    ratingFormRef.current?.cancelRating()
     const height = windowHeight * 0.8
     api.start({
       y: height,
@@ -93,6 +100,8 @@ const SidebarContainerMobile: React.FC<Props> = ({
     }
   )
 
+  const ratingFormRef = useRef<{ cancelRating: () => void }>(null)
+
   return (
     <a.div
       {...bind()}
@@ -105,11 +114,13 @@ const SidebarContainerMobile: React.FC<Props> = ({
       }}
     >
       <Sidebar
+        ref={ratingFormRef}
         display="mobile"
         lotName={lotName}
         color={color}
-        rating={2.6}
-        ratingCount={416}
+        rating={rating}
+        reviews={reviews}
+        ratingCount={count}
       />
     </a.div>
   )

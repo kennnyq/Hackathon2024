@@ -7,10 +7,9 @@ import {
 } from 'react-zoom-pan-pinch'
 import Map from './Map'
 import { useWindowSize } from '~/utils/hooks'
-import { MarkerInfo } from '~/utils/types'
+import { MarkerInfo, Review } from '~/utils/types'
 
 // Map Dimensions
-const WIDTH = 816
 const HEIGHT = 1056
 const BOUNDS_OFFSET = 30
 
@@ -28,11 +27,14 @@ const Controls = () => {
 
 type Props = {
   color: string
-  markers: MarkerInfo[]
+  markers: any[]
   sidebarTimeout: Boolean
   setSwitcherActive: (show: boolean) => void
   setSidebarActive: (show: boolean) => void
   setSidebarTimeout: (show: boolean) => void
+  setRating: (set: number) => void
+  setCount: (set: number) => void
+  setReviews: (set: Review[]) => void
   setLotName: (set: string) => void
 }
 
@@ -43,6 +45,9 @@ const MapContainer: React.FC<Props> = ({
   setSwitcherActive,
   setSidebarActive,
   setSidebarTimeout,
+  setRating,
+  setCount,
+  setReviews,
   setLotName,
 }) => {
   const ref = useRef<ReactZoomPanPinchRef>(null)
@@ -88,6 +93,9 @@ const MapContainer: React.FC<Props> = ({
               setSwitcherActive={setSwitcherActive}
               setSidebarActive={setSidebarActive}
               setSidebarTimeout={setSidebarTimeout}
+              setRating={setRating}
+              setCount={setCount}
+              setReviews={setReviews}
               setLotName={setLotName}
             />
           </TransformComponent>

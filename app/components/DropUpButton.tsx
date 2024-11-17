@@ -1,7 +1,13 @@
 // ~/components/BDUnoopprttu.tsx
 import { Link } from '@remix-run/react'
 import { useState, useEffect, useRef } from 'react'
-import { FaInfoCircle, FaCar, FaEnvelope, FaGithub, FaHome } from 'react-icons/fa' // Import FaHome
+import {
+  FaInfoCircle,
+  FaCar,
+  FaEnvelope,
+  FaGithub,
+  FaHome,
+} from 'react-icons/fa' // Import FaHome
 
 const DropUpButton = ({ pageType }: any) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -79,8 +85,6 @@ const DropUpButton = ({ pageType }: any) => {
           role="menu"
           className="absolute bottom-20 right-0 bg-white shadow-lg rounded-lg flex flex-col items-center space-y-2 p-2 animate-fadeIn"
         >
-          
-
           {/* About Us */}
           <Link
             to="/AboutUs"
@@ -88,18 +92,6 @@ const DropUpButton = ({ pageType }: any) => {
             aria-label="About Us"
           >
             <FaInfoCircle size={20} className="text-blue-500" />
-          </Link>
-
-          {/* Car */}
-          <Link
-            to="/BadParking"
-            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
-            onClick={() => {
-              // Handle Car-related action
-            }}
-            aria-label="Car"
-          >
-            <FaCar size={20} className="text-blue-500" />
           </Link>
 
           {/* Contact Us */}

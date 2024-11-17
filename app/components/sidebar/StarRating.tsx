@@ -1,5 +1,5 @@
 // StarRating.tsx
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useImperativeHandle } from 'react'
 
 interface StarRatingProps {
   size?: number

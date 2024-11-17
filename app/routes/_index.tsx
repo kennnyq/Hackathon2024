@@ -6,11 +6,11 @@ import MapContainer from '~/components/map/MapContainer'
 import SidebarContainerDesktop from '~/components/sidebar/SidebarDesktopContainer'
 import SidebarContainerMobile from '~/components/sidebar/SidebarMobileContainer'
 import { useWindowSize } from '~/utils/hooks'
-import { Color } from '~/utils/types'
+import { Color, Review } from '~/utils/types'
 import { MarkerLocations } from '~/utils/marker_locations'
 import ColorSwitcher from '~/components/ColorSwitcher'
 import DropUpButton from '~/components/DropUpButton'
-import { uuidv4 } from '~/utils/utils'
+import { remapMarkers, uuidv4 } from '~/utils/utils'
 import { useLoaderData } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
@@ -25,17 +25,22 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [windowWidth, windowHeight] = useWindowSize()
-  const pinataData = useLoaderData()
   const largeViewport = windowWidth > 768
+  const pinataData = useLoaderData()
 
+  const [markerInfo, setMarkerInfo] = useState(MarkerLocations)
   const [sidebarTimeout, setSidebarTimeout] = useState<Boolean>(false)
   const [sidebarActive, setSidebarActive] = useState<Boolean>(true)
   const [switcherActive, setSwitcherActive] = useState<Boolean>(false)
+  const [rating, setRating] = useState(null)
+  const [count, setCount] = useState(0)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [color, setColor] = useState<Color>('green')
   const [lotName, setLotName] = useState<string>('none')
 
-  console.log(pinataData)
-  // useEffect(() => {}, [lotName])
+  useEffect(() => {
+    setMarkerInfo(remapMarkers(pinataData, MarkerLocations))
+  }, [])
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -47,17 +52,23 @@ export default function Index() {
       />
       <MapContainer
         color={color}
-        markers={MarkerLocations}
+        markers={markerInfo}
         sidebarTimeout={sidebarTimeout}
         setSidebarActive={setSidebarActive}
         setSwitcherActive={setSwitcherActive}
         setSidebarTimeout={setSidebarTimeout}
+        setRating={setRating}
+        setCount={setCount}
+        setReviews={setReviews}
         setLotName={setLotName}
       />
       {isDesktop || largeViewport ? (
         <SidebarContainerDesktop
           lotName={lotName}
           color={color}
+          rating={rating}
+          count={count}
+          reviews={reviews}
           sidebarActive={sidebarActive}
           sidebarTimeout={sidebarTimeout}
           setSidebarActive={setSidebarActive}
@@ -66,12 +77,16 @@ export default function Index() {
         <SidebarContainerMobile
           lotName={lotName}
           color={color}
+          rating={rating}
+          count={count}
+          reviews={reviews}
           sidebarActive={sidebarActive}
           sidebarTimeout={sidebarTimeout}
           setSidebarActive={setSidebarActive}
         />
       )}
       <DropUpButton pageType="home" />
+      <div className="hidden text-[#69b34c] text-[#acb334] text-[#fab733] text-[#ff8e15] text-[#ff0d0d] bg-[#69b34c] bg-[#acb334] bg-[#fab733] bg-[#ff8e15] bg-[#ff0d0d]"></div>
     </Suspense>
   )
 }
@@ -163,6 +178,15 @@ export const action = async ({ request }: any) => {
       filepath: `data/${(image as any).name || 'image.jpg'}`,
       contentType: (image as any).type || 'image/jpeg',
     })
+  } else {
+    const dummyBuffer = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwADggFFcQ5e3wAAAABJRU5ErkJggg==',
+      'base64'
+    )
+    data.append('file', dummyBuffer, {
+      filename: 'file',
+      filepath: `data/file`,
+    })
   }
 
   const metadata = JSON.stringify({
@@ -172,7 +196,7 @@ export const action = async ({ request }: any) => {
       uploadDate: currentDateTime,
       lotName: lotName,
       color: color,
-      imgName: (image as any)?.name || 'image.jpg',
+      imgName: (image as any)?.name || 'file',
     },
   })
   data.append('pinataMetadata', metadata)
@@ -188,13 +212,12 @@ export const action = async ({ request }: any) => {
   const PINATA_SECRET_API_KEY = process.env.PINATA_SECRET_API_KEY
 
   // Ensure that API keys are set
-  if (!PINATA_API_KEY || !PINATA_SECRET_API_KEY) {
-    console.error('Pinata API keys are not set.')
-    return new Response(
-      JSON.stringify({ error: 'Server configuration error.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
-  }
+  //   console.error('Pinata API keys are not set.')
+  //   return new Response(
+  //     JSON.stringify({ error: 'Server configuration error.' }),
+  //     { status: 500, headers: { 'Content-Type': 'application/json' } }
+  //   )
+  // }
 
   try {
     // Make the POST request to Pinata

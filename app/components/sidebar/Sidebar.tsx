@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import RatingForm from './RatingForm'
-import { Color } from '~/utils/types'
+import { Color, Review } from '~/utils/types'
 import { kebabCase } from '~/utils/utils'
 import ImageContainer from './ImageContainer'
 
@@ -13,7 +13,7 @@ const STATUS_TEXT = [
   'Full',
 ]
 
-const StarRatingDisplay = ({ rating }: any) => {
+export const StarRatingDisplay = ({ rating, size = 16 }: any) => {
   const starCount = Math.max(Math.round(rating), 1)
 
   return [...Array(5)].map((_, i) => {
@@ -22,8 +22,8 @@ const StarRatingDisplay = ({ rating }: any) => {
       <img
         key={i}
         src={isFilled ? '/star_filled.svg' : '/star_gray.svg'}
-        width={16}
-        height={16}
+        width={size}
+        height={size}
       />
     )
   })
@@ -34,6 +34,7 @@ type Props = {
   lotName: string
   color: Color
   rating: number
+  reviews: Review[]
   ratingCount: number
 }
 
@@ -45,47 +46,51 @@ const StatusDisplay = ({ rating }: any) => {
   return <div className={`text-sm text-[${statusColor}]`}>{statusText}</div>
 }
 
-const Sidebar: React.FC<Props> = ({
-  display,
-  lotName,
-  color,
-  rating,
-  ratingCount,
-}) => {
-  let numImages = 3
-
-  return (
-    <div className="w-full text-[#202124] font-sans pb-10">
-      <img
-        className={`object-cover m-0 w-full touch-none pointer-events-none 
+export const Sidebar = forwardRef(
+  ({ display, lotName, color, rating, reviews, ratingCount }: Props, ref) => {
+    const ratingFormRef = useRef<{ cancelRating: () => void }>(null)
+    useImperativeHandle(ref, () => ({
+      cancelRating: () => {
+        ratingFormRef.current?.cancelRating()
+      },
+    }))
+    return (
+      <div className="w-full text-[#202124] font-sans pb-10">
+        <img
+          className={`object-cover m-0 w-full touch-none pointer-events-none 
           select-none ${display === 'mobile' ? 'h-32' : 'h-48'}`}
-        src="/placeholder_lot.jpg"
-      />
-      <section className="px-6 pb-6 border-b-[1px] border-gray-300">
-        <h1 className="pt-4 text-xl">{lotName}</h1>
-        <div className="mt-2 flex items-center text-[#70757a] text-sm">
-          <span className="">{rating}</span>
-          <span className="pl-[6px] pr-[4px] flex">
-            <StarRatingDisplay rating={rating} />
-          </span>
-          <span className="">({ratingCount})</span>
-        </div>
-        <StatusDisplay rating={rating} />
-      </section>
-      <RatingForm lotName={kebabCase(lotName)} color={color} />
-      <section className="py-4 px-6 border-b-[1px] border-gray-300">
-        <h2 className="font-medium">Images</h2>
-        {numImages === 0 ? (
-          <div className="flex flex-col my-6 justify-center items-center">
-            <img src="no_data.svg" className="h-28 w-28 m-4" />
-            <p className="text-sm text-gray-500">No images posted yet.</p>
+          src="/placeholder_lot.jpg"
+        />
+        <section className="px-6 pb-6 border-b-[1px] border-gray-300">
+          <h1 className="pt-4 text-xl">{lotName}</h1>
+          <div className="mt-2 flex items-center text-[#70757a] text-sm">
+            <span className="">{rating}</span>
+            <span className="pl-[6px] pr-[4px] flex">
+              <StarRatingDisplay rating={rating} />
+            </span>
+            <span className="">({ratingCount})</span>
           </div>
-        ) : (
-          <ImageContainer />
-        )}
-      </section>
-    </div>
-  )
-}
+          <StatusDisplay rating={rating} />
+        </section>
+        <RatingForm
+          ref={ratingFormRef}
+          lotName={kebabCase(lotName)}
+          color={color}
+        />
+        <section className="pt-4 border-b-[1px] border-gray-300">
+          <h2 className="font-medium px-6">Images</h2>
+          {reviews.length === 0 ? (
+            <div className="flex flex-col my-6 px-6 pb-4 justify-center items-center">
+              <img src="no_data.svg" className="h-28 w-28 m-4" />
+              <p className="text-sm text-gray-500">No images posted yet.</p>
+            </div>
+          ) : (
+            <ImageContainer reviews={reviews} />
+          )}
+        </section>
+      </div>
+    )
+  }
+)
 
 export default Sidebar

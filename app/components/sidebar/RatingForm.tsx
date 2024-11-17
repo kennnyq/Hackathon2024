@@ -1,17 +1,20 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 import { Form } from '@remix-run/react'
 import StarRating from './StarRating'
 import { Color } from '~/utils/types'
+import JSConfetti from 'js-confetti'
 
 type Props = {
   color: Color
   lotName: string
 }
 
-const RatingForm: React.FC<Props> = ({ color, lotName }) => {
+const RatingForm = forwardRef(({ color, lotName }: Props, ref) => {
   const [rating, setRating] = useState<number | null>(null)
+  const [display, setDisplay] = useState<'block' | 'none'>('block')
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const jsConfetti = new JSConfetti()
 
   const handleDivClick = () => {
     fileInputRef.current?.click()
@@ -29,6 +32,13 @@ const RatingForm: React.FC<Props> = ({ color, lotName }) => {
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    cancelRating: () => {
+      handleCancelImage()
+      setRating(null)
+    },
+  }))
+
   const handleCancelImage = () => {
     setImagePreview(null)
     if (fileInputRef.current) {
@@ -41,6 +51,17 @@ const RatingForm: React.FC<Props> = ({ color, lotName }) => {
       method="post"
       encType="multipart/form-data"
       className="w-full border-b-[1px] border-gray-300 py-4 px-6"
+      style={{
+        display: display,
+      }}
+      onSubmit={() => {
+        setDisplay('none')
+        setTimeout(() => {
+          handleCancelImage()
+          setRating(null)
+          jsConfetti.addConfetti()
+        }, 1000)
+      }}
     >
       <h2 className="font-medium">Add a rating</h2>
       <StarRating setRating={setRating} rating={rating} size={34} />
@@ -68,7 +89,7 @@ const RatingForm: React.FC<Props> = ({ color, lotName }) => {
             <button
               type="button"
               onClick={handleCancelImage}
-              className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded"
+              className="absolute top-2 right-2 bg-white text-black text-xs px-3 py-2 rounded hover:bg-slate-50"
             >
               Cancel
             </button>
@@ -93,6 +114,6 @@ const RatingForm: React.FC<Props> = ({ color, lotName }) => {
       </button>
     </Form>
   )
-}
+})
 
 export default RatingForm

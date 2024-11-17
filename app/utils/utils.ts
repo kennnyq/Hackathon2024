@@ -18,53 +18,79 @@ export function uuidv4() {
   )
 }
 
-export function filterAndSortPinataData(givenLot, givenColor, pinataData) {
-  // Initialize an empty array to store the matching objects
-  const matchingObjects = [];
+export function timeAgo(isoDate: string): string {
+  const date = new Date(isoDate)
+  const now = new Date()
+  const differenceInMilliseconds = now.getTime() - date.getTime()
+  const differenceInHours = Math.ceil(
+    differenceInMilliseconds / (1000 * 60 * 60)
+  )
 
-  // Loop through each object in the PinataData array
-  for (const item of pinataData) {
-      const keyvalues = item.metadata.keyvalues || {};
-
-      // Skip the object if imgName is null or undefined
-      if (keyvalues.imgName === null || keyvalues.imgName === undefined) {
-          continue;
-      }
-
-      // Check if lotName and color match the given ones
-      if (keyvalues.lotName !== givenLot || keyvalues.color !== givenColor) {
-          continue;
-      }
-
-      // Check if a file exists and if it's a png, jpg, or jpeg
-      const fileName = keyvalues.imgName;
-      if (!fileName) {
-          continue;
-      }
-
-      const extension = fileName.split('.').pop().toLowerCase();
-      if (!['png', 'jpg', 'jpeg'].includes(extension)) {
-          continue;
-      }
-
-      // All conditions met, add the object to the matchingObjects array
-      matchingObjects.push({
-          ipfs_pin_hash: item.ipfs_pin_hash,
-          imgName: fileName,
-          rating: keyvalues.rating || null,
-          date_pinned: new Date(item.date_pinned)
-      });
+  if (differenceInHours === 1) {
+    return '1 hour ago'
+  } else {
+    return `${differenceInHours} hours ago`
   }
+}
 
-  // Sort the matching objects by date_pinned (ascending: oldest to newest)
-  matchingObjects.sort((a, b) => a.date_pinned - b.date_pinned);
+export function remapMarkers(pinataData: any, markerLocations: any) {
+  console.log('Pinata Data:', pinataData)
+  console.log('Marker Loco:', markerLocations)
+  return markerLocations.map((marker: any) => {
+    const markerKebabLocation = kebabCase(marker.location)
+    let count = 0
+    let totalRating = 0
+    let validImages: any = []
 
-  // Output the sorted objects with required values
-  const output = matchingObjects.map(obj => ({
-      ipfs_pin_hash: obj.ipfs_pin_hash,
-      imgName: obj.imgName,
-      rating: obj.rating
-  }));
+    pinataData.forEach((file: any) => {
+      if (file.date_unpinned) return
 
-  return output;
+      const fileLotName = file.metadata.keyvalues.lotName
+      const fileColor = file.metadata.keyvalues.color
+      const imageName = file.metadata.keyvalues?.imgName
+      const fileRating = parseFloat(file.metadata.keyvalues.rating)
+
+      if (marker.color !== fileColor || markerKebabLocation !== fileLotName)
+        return
+
+      count++
+      if (!isNaN(fileRating)) {
+        totalRating += fileRating
+      }
+
+      // Check if image is valid
+      if (!imageName) return
+
+      const extension = imageName.split('.').pop().toLowerCase()
+      if (!['png', 'jpg', 'jpeg'].includes(extension)) {
+        return
+      }
+
+      console.log(imageName)
+
+      validImages.push({
+        imgName: imageName,
+        rating: fileRating,
+        hash: file.ipfs_pin_hash,
+        date: file.date_pinned,
+      })
+    })
+
+    const reviews = validImages
+      .sort((a: any, b: any) => a.date_pinned - b.date_pinned)
+      .map((val: any, i: any) => ({
+        imagePath: `https://gateway.pinata.cloud/ipfs/${val.hash}/data/${val.imgName}`,
+        rating: val.rating,
+        dateTime: val.date,
+      }))
+
+    const averageRating = (count > 0 ? totalRating / count : 0).toFixed(1)
+
+    return {
+      ...marker,
+      count,
+      averageRating,
+      reviews,
+    }
+  })
 }

@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
 import { useTransformEffect, useTransformInit } from 'react-zoom-pan-pinch'
-import { MarkerInfo } from '~/utils/types'
+import { MarkerInfo, Review } from '~/utils/types'
 import Marker from './Marker'
 import { kebabCase } from '~/utils/utils'
 
+const STATUS_COLORS = ['#69b34c', '#acb334', '#fab733', '#ff8e15', '#ff0d0d']
+
 type Props = {
   color: string
-  markers: MarkerInfo[]
+  markers: any[]
   sidebarTimeout: Boolean
   setSwitcherActive: (show: boolean) => void
   setSidebarActive: (show: boolean) => void
   setSidebarTimeout: (show: boolean) => void
+  setRating: (set: number) => void
+  setCount: (set: number) => void
+  setReviews: (set: Review[]) => void
   setLotName: (set: string) => void
 }
 
@@ -21,6 +26,9 @@ const Map: React.FC<Props> = ({
   setSwitcherActive,
   setSidebarActive,
   setSidebarTimeout,
+  setRating,
+  setCount,
+  setReviews,
   setLotName,
 }) => {
   const [scale, setScale] = useState(1)
@@ -47,11 +55,15 @@ const Map: React.FC<Props> = ({
   const MarkerElements = markers.map((val, i) => {
     const markerActive = val.color == color
     const lotID = val.location
+
+    const status = Math.max(Math.round(val.averageRating), 1) - 1
+    const statusColor = STATUS_COLORS[status]
+
     return (
       <Marker
         key={i}
         active={markerActive}
-        color={val.color}
+        color={statusColor}
         x={val.x}
         y={val.y}
         scale={scale}
@@ -59,6 +71,9 @@ const Map: React.FC<Props> = ({
           setLotName(lotID)
           setSidebarActive(true)
           setSidebarTimeout(true)
+          setRating(val.averageRating)
+          setCount(val.count)
+          setReviews(val.reviews)
           setTimeout(() => {
             setSidebarTimeout(false)
           }, 400)
