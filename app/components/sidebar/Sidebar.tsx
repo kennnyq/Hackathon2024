@@ -1,5 +1,7 @@
 import React from 'react'
 import RatingForm from './RatingForm'
+import { Color } from '~/utils/types'
+import { kebabCase } from '~/utils/utils'
 import ImageContainer from './ImageContainer'
 
 const STATUS_COLORS = ['#69b34c', '#acb334', '#fab733', '#ff8e15', '#ff0d0d']
@@ -10,13 +12,6 @@ const STATUS_TEXT = [
   'Almost full',
   'Full',
 ]
-
-type Props = {
-  display: 'desktop' | 'mobile'
-  lotName: string
-  rating: number
-  ratingCount: number
-}
 
 const StarRatingDisplay = ({ rating }: any) => {
   const starCount = Math.max(Math.round(rating), 1)
@@ -34,6 +29,14 @@ const StarRatingDisplay = ({ rating }: any) => {
   })
 }
 
+type Props = {
+  display: 'desktop' | 'mobile'
+  lotName: string
+  color: Color
+  rating: number
+  ratingCount: number
+}
+
 const StatusDisplay = ({ rating }: any) => {
   const status = Math.max(Math.round(rating), 1) - 1
   const statusText = STATUS_TEXT[status]
@@ -45,10 +48,11 @@ const StatusDisplay = ({ rating }: any) => {
 const Sidebar: React.FC<Props> = ({
   display,
   lotName,
+  color,
   rating,
   ratingCount,
 }) => {
-  const numImages = 3;
+  let numImages = 3
 
   return (
     <div className="w-full text-[#202124] font-sans pb-10">
@@ -68,16 +72,17 @@ const Sidebar: React.FC<Props> = ({
         </div>
         <StatusDisplay rating={rating} />
       </section>
-      <RatingForm />
+      <RatingForm lotName={kebabCase(lotName)} color={color} />
       <section className="py-4 px-6 border-b-[1px] border-gray-300">
         <h2 className="font-medium">Images</h2>
-        {numImages === 0 ?
-        (<div className="flex flex-col my-6 justify-center items-center">
-          <img src="no_data.svg" className="h-28 w-28 m-4" />
-          <p className="text-sm text-gray-500">No images posted yet.</p>
-        </div>) :
-        <ImageContainer />
-        }
+        {numImages === 0 ? (
+          <div className="flex flex-col my-6 justify-center items-center">
+            <img src="no_data.svg" className="h-28 w-28 m-4" />
+            <p className="text-sm text-gray-500">No images posted yet.</p>
+          </div>
+        ) : (
+          <ImageContainer />
+        )}
       </section>
     </div>
   )

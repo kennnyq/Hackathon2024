@@ -1,4 +1,4 @@
-// ~/routes/index.tsx
+// ~/routes/index.tsx (Adjust the path if different)
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { Suspense, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
@@ -25,8 +25,14 @@ export default function Index() {
   const [windowWidth, windowHeight] = useWindowSize()
   const largeViewport = windowWidth > 768
 
+  const [sidebarTimeout, setSidebarTimeout] = useState<Boolean>(false)
+  const [sidebarActive, setSidebarActive] = useState<Boolean>(true)
   const [switcherActive, setSwitcherActive] = useState<Boolean>(false)
-  const [color, setColor] = useState<Color>('green')
+  const [color, setColor] = useState<Color>('none')
+  const [lotName, setLotName] = useState<string>('none')
+
+  console.log(color)
+  console.log(lotName)
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -39,21 +45,30 @@ export default function Index() {
       <MapContainer
         color={color}
         markers={MarkerLocations}
+        sidebarTimeout={sidebarTimeout}
+        setSidebarActive={setSidebarActive}
         setSwitcherActive={setSwitcherActive}
+        setSidebarTimeout={setSidebarTimeout}
+        setLotName={setLotName}
       />
       {isDesktop || largeViewport ? (
-        <SidebarContainerDesktop />
+        <SidebarContainerDesktop
+          lotName={lotName}
+          color={color}
+          sidebarActive={sidebarActive}
+          sidebarTimeout={sidebarTimeout}
+          setSidebarActive={setSidebarActive}
+        />
       ) : (
-        <SidebarContainerMobile />
+        <SidebarContainerMobile
+          lotName={lotName}
+          color={color}
+          sidebarActive={sidebarActive}
+          sidebarTimeout={sidebarTimeout}
+          setSidebarActive={setSidebarActive}
+        />
       )}
       <DropUpButton pageType="home" /> {/* Add the DropUpButton here */}
     </Suspense>
   )
-}
-
-export const loader: LoaderFunction = async ({ request, params, context }) => {
-  const slug = params.index
-
-  console.log(params)
-  return null
 }

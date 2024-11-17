@@ -7,10 +7,22 @@ import { kebabCase } from '~/utils/utils'
 type Props = {
   color: string
   markers: MarkerInfo[]
+  sidebarTimeout: Boolean
   setSwitcherActive: (show: boolean) => void
+  setSidebarActive: (show: boolean) => void
+  setSidebarTimeout: (show: boolean) => void
+  setLotName: (set: string) => void
 }
 
-const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
+const Map: React.FC<Props> = ({
+  color,
+  markers,
+  sidebarTimeout,
+  setSwitcherActive,
+  setSidebarActive,
+  setSidebarTimeout,
+  setLotName,
+}) => {
   const [scale, setScale] = useState(1)
 
   useTransformInit(({ instance }) => {
@@ -27,20 +39,32 @@ const Map: React.FC<Props> = ({ color, markers, setSwitcherActive }) => {
   useTransformEffect(({ state, instance }) => {
     setScale(state.scale)
     setSwitcherActive(false)
+    if (!sidebarTimeout) {
+      setSidebarActive(false)
+    }
   })
 
   const MarkerElements = markers.map((val, i) => {
     const markerActive = val.color == color
-    const lotID = kebabCase(val.location)
+    const lotID = val.location
     return (
       <Marker
         key={i}
         active={markerActive}
-        lotID={lotID}
         color={val.color}
         x={val.x}
         y={val.y}
         scale={scale}
+        onClick={() => {
+          console.log('Activa')
+          setLotName(lotID)
+          setSidebarActive(true)
+          setSidebarTimeout(true)
+          setTimeout(() => {
+            console.log(sidebarTimeout)
+            setSidebarTimeout(false)
+          }, 400)
+        }}
       />
     )
   })

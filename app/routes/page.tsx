@@ -10,8 +10,8 @@ type File = {
 
 function Index() {
   const files = useLoaderData<File[]>()
-  const file = files[4]
-  console.log(file.metadata)
+  const file = files[0]
+  console.log(file)
 
   return (
     <div>
@@ -21,7 +21,7 @@ function Index() {
           <h3>{file.metadata.name || file.ipfs_pin_hash}</h3>
           {/* Display the image */}
           <img
-            src={`https://gateway.pinata.cloud/ipfs/${file.ipfs_pin_hash}/data/camera.jpg`}
+            src={`https://gateway.pinata.cloud/ipfs/${file.ipfs_pin_hash}/`}
             alt={file.metadata.name || 'Pinned File'}
             style={{ width: '200px', height: 'auto' }}
           />

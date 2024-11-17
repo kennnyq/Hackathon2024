@@ -25,49 +25,42 @@ export const MarkerLocations: MarkerInfo[] = [
     x: 585,
     y: 803,
   },
-
   {
     color: 'green',
     location: 'Lot A2',
     x: 637,
     y: 276,
   },
-
   {
     color: 'green',
     location: 'Lot B2',
     x: 670,
     y: 340,
   },
-
   {
     color: 'green',
     location: 'Lot V',
     x: 46,
     y: 520,
   },
-
   {
     color: 'green',
     location: 'Lot SPN - East',
     x: 335,
     y: 75,
   },
-
   {
     color: 'green',
     location: 'Lot SPN - North',
     x: 295,
     y: 20,
   },
-
   {
     color: 'green',
     location: 'Lot SPN - West',
     x: 290,
     y: 115,
   },
-
   {
     color: 'green',
     location: 'Lot W',
