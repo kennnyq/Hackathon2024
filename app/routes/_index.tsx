@@ -24,7 +24,7 @@ export default function Index() {
   const largeViewport = windowWidth > 768
 
   const [switcherActive, setSwitcherActive] = useState<Boolean>(false)
-  const [color, setColor] = useState<Color>('none')
+  const [color, setColor] = useState<Color>('green')
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

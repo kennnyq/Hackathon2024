@@ -9,13 +9,13 @@ type displayProps = {
 
 const ColorDisplay: React.FC<displayProps> = ({ color, onClick }) => {
   const colorMap: { [key in Color]: string } = {
-    green: '#28a745',
-    gold: '#ffc107',
-    orange: '#fd7e14',
+    green: '#05b050',
+    gold: '#ffff00',
+    orange: '#e77623',
   }
 
   const backgroundColor = colorMap[color] || 'white'
-  const textColor = color === 'gold' ? 'white' : 'white'
+  const textColor = color === 'gold' ? 'black' : 'white'
 
   return (
     <div
