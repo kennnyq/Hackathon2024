@@ -59,7 +59,7 @@ const ColorSwitcher: React.FC<Props> = ({
   setColor,
   setSwitcherActive,
 }) => {
-  const colors: Color[] = ['none', 'green', 'gold', 'orange']
+  const colors: Color[] = [ 'green', 'gold', 'orange']
 
   return (
     <div className="h-8 w-28 flex flex-col absolute z-10 right-2 top-3 font-medium font-sans">
@@ -76,14 +76,17 @@ const ColorSwitcher: React.FC<Props> = ({
             : 'transform translate-y-1.5 opacity-0 invisible'
         }`}
       >
-        {colors.map((val, index) => (
-          <ColorOption
-            key={index}
-            color={val}
-            setColor={setColor}
-            setSwitcherActive={setSwitcherActive}
-          />
-        ))}
+        {colors.map((val, index) => {
+          if (val === color) return
+          return (
+            <ColorOption
+              key={index}
+              color={val}
+              setColor={setColor}
+              setSwitcherActive={setSwitcherActive}
+            />
+          )
+        })}
       </div>
     </div>
   )
