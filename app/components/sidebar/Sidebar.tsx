@@ -1,5 +1,6 @@
 import React from 'react'
 import RatingForm from './RatingForm'
+import ImageContainer from './ImageContainer'
 
 const STATUS_COLORS = ['#69b34c', '#acb334', '#fab733', '#ff8e15', '#ff0d0d']
 const STATUS_TEXT = [
@@ -47,6 +48,8 @@ const Sidebar: React.FC<Props> = ({
   rating,
   ratingCount,
 }) => {
+  const numImages = 3;
+
   return (
     <div className="w-full text-[#202124] font-sans pb-10">
       <img
@@ -68,10 +71,13 @@ const Sidebar: React.FC<Props> = ({
       <RatingForm />
       <section className="py-4 px-6 border-b-[1px] border-gray-300">
         <h2 className="font-medium">Images</h2>
-        <div className="flex flex-col my-6 justify-center items-center">
+        {numImages === 0 ?
+        (<div className="flex flex-col my-6 justify-center items-center">
           <img src="no_data.svg" className="h-28 w-28 m-4" />
           <p className="text-sm text-gray-500">No images posted yet.</p>
-        </div>
+        </div>) :
+        <ImageContainer />
+        }
       </section>
     </div>
   )

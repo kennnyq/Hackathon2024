@@ -14,12 +14,19 @@ const RatingForm = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Optionally, display a preview of the selected image
+      // Display a preview of the selected image
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCancelImage = () => {
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Clear the file input
     }
   };
 
@@ -41,14 +48,23 @@ const RatingForm = () => {
       />
       <div
         onClick={handleDivClick}
-        className="w-full h-40 my-4 bg-slate-50 border-gray-300 border-[1px] border-dashed rounded-lg flex justify-center items-center cursor-pointer"
+        className="w-full h-40 my-4 bg-slate-50 border-gray-300 border-[1px] border-dashed rounded-lg flex justify-center items-center cursor-pointer relative"
       >
         {imagePreview ? (
-          <img
-            src={imagePreview}
-            alt="Preview"
-            className="object-cover h-full w-full rounded-lg"
-          />
+          <>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="object-cover h-full w-full rounded-lg"
+            />
+            <button
+              type="button"
+              onClick={handleCancelImage}
+              className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded"
+            >
+              Cancel
+            </button>
+          </>
         ) : (
           <div className="flex flex-col items-center text-gray-400">
             <img src="/camera.svg" alt="Upload" className="w-9 h-9" />
