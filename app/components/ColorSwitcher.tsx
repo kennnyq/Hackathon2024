@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Color } from '~/utils/types'
 import { capitalizeFirst } from '~/utils/utils'
 
@@ -7,14 +7,25 @@ type displayProps = {
   onClick: () => void
 }
 
-const ColorDisplay: React.FC<displayProps> = ({ color, onClick }: any) => {
+const ColorDisplay: React.FC<displayProps> = ({ color, onClick }) => {
+  const colorMap: { [key in Color]: string } = {
+    green: '#28a745',
+    gold: '#ffc107',
+    orange: '#fd7e14',
+  }
+
+  const backgroundColor = colorMap[color] || 'white'
+  const textColor = color === 'gold' ? 'white' : 'white'
+
   return (
     <div
       className="flex justify-center items-center h-8 w-full
-      cursor-pointer select-none rounded-[32px] bg-white hover:bg-gray-50
+      cursor-pointer select-none rounded-[32px]
       text-base transition ease-linear duration-75"
-      onClick={() => onClick()}
+      onClick={onClick}
       style={{
+        backgroundColor: backgroundColor,
+        color: textColor,
         boxShadow:
           '0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15)',
       }}
@@ -48,7 +59,7 @@ const ColorOption: React.FC<optionProps> = ({
 
 type Props = {
   color: Color
-  switcherActive: Boolean
+  switcherActive: boolean
   setColor: (color: Color) => void
   setSwitcherActive: (show: boolean) => void
 }
@@ -59,7 +70,7 @@ const ColorSwitcher: React.FC<Props> = ({
   setColor,
   setSwitcherActive,
 }) => {
-  const colors: Color[] = [ 'green', 'gold', 'orange']
+  const colors: Color[] = ['green', 'gold', 'orange']
 
   return (
     <div className="h-8 w-28 flex flex-col absolute z-10 right-2 top-3 font-medium font-sans">
@@ -77,7 +88,7 @@ const ColorSwitcher: React.FC<Props> = ({
         }`}
       >
         {colors.map((val, index) => {
-          if (val === color) return
+          if (val === color) return null
           return (
             <ColorOption
               key={index}
