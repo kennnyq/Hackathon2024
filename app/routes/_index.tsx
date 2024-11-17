@@ -1,6 +1,6 @@
 // ~/routes/index.tsx (Adjust the path if different)
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import MapContainer from '~/components/map/MapContainer'
 import SidebarContainerDesktop from '~/components/sidebar/SidebarDesktopContainer'
@@ -10,12 +10,8 @@ import { Color } from '~/utils/types'
 import { MarkerLocations } from '~/utils/marker_locations'
 import ColorSwitcher from '~/components/ColorSwitcher'
 import DropUpButton from '~/components/DropUpButton'
-import axios from 'axios'
-import FormData from 'form-data'
-import { upload } from '~/utils/multer'
-import { redirect, useActionData } from '@remix-run/react'
-import fs from 'fs'
-import path from 'path'
+import { uuidv4 } from '~/utils/utils'
+import { useLoaderData } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
   return [
@@ -29,6 +25,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [windowWidth, windowHeight] = useWindowSize()
+  const pinataData = useLoaderData()
   const largeViewport = windowWidth > 768
 
   const [sidebarTimeout, setSidebarTimeout] = useState<Boolean>(false)
@@ -37,8 +34,8 @@ export default function Index() {
   const [color, setColor] = useState<Color>('green')
   const [lotName, setLotName] = useState<string>('none')
 
-  console.log(color)
-  console.log(lotName)
+  console.log(pinataData)
+  // useEffect(() => {}, [lotName])
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -79,13 +76,53 @@ export default function Index() {
   )
 }
 
+export const loader = async () => {
+  const axios = (await import('axios')).default
+
+  // Set your Pinata API key and secret
+  const PINATA_API_KEY = process.env.PINATA_API_KEY
+  const PINATA_SECRET_API_KEY = process.env.PINATA_SECRET_API_KEY
+
+  if (!PINATA_API_KEY || !PINATA_SECRET_API_KEY) {
+    console.error('Pinata API keys are not set.')
+    return { error: 'Server configuration error.' }
+  }
+
+  try {
+    // Make the GET request to Pinata
+    const response = await axios.get('https://api.pinata.cloud/data/pinList', {
+      headers: {
+        pinata_api_key: PINATA_API_KEY,
+        pinata_secret_api_key: PINATA_SECRET_API_KEY,
+      },
+    })
+
+    console.log('Response received')
+
+    // Return the list of files
+    return response.data.rows
+  } catch (error) {
+    console.error('Error retrieving files from Pinata:', error)
+    return { error: 'Failed to retrieve data from Pinata.' }
+  }
+}
+
 export const action = async ({ request }: any) => {
+  const axios = (await import('axios')).default
+  const FormData = (await import('form-data')).default
+  const fs = await import('fs')
+  const path = await import('path')
+
   const formData = await request.formData()
   const rating = formData.get('rating')
   const image = formData.get('image')
+  const lotName = formData.get('lotName')
+  const color = formData.get('color')
   const currentDateTime = new Date().toISOString()
 
   console.log('Rating:', rating)
+  console.log('Lot Name:', lotName)
+  console.log('Color:', color)
   console.log('Image:', image)
 
   // Validate the rating
@@ -93,27 +130,25 @@ export const action = async ({ request }: any) => {
     return { error: 'Rating is required.' }
   }
 
-  try {
-    // Handle the file upload
-    const filePath = await handleUpload(image)
+  // try {
+  //   // Handle the file upload
+  //   const filePath = await handleUpload(image)
 
-    console.log(filePath)
+  //   console.log(filePath)
 
-    // Send the file to OpenAI API
-    const response = await sendImageToOpenAI(filePath)
+  //   // Send the file to OpenAI API
+  //   const response = await sendImageToOpenAI(filePath)
 
-    // return Response.json({
-    //   message: 'Image uploaded successfully!',
-    //   data: response,
-    // })
-  } catch (error: any) {
-    // return Response.json(
-    //   { message: 'Failed to upload image to OpenAI.', error: error.message },
-    //   { status: 500 }
-    // )
-  }
-
-  return
+  //   return Response.json({
+  //     message: 'Image uploaded successfully!',
+  //     data: response,
+  //   })
+  // } catch (error: any) {
+  //   return Response.json(
+  //     { message: 'Failed to upload image to OpenAI.', error: error.message },
+  //     { status: 500 }
+  //   )
+  // }
 
   // Create a new FormData instance
   const data = new FormData()
@@ -131,10 +166,13 @@ export const action = async ({ request }: any) => {
   }
 
   const metadata = JSON.stringify({
-    name: (image as any)?.name || 'image.jpg',
+    name: uuidv4(),
     keyvalues: {
       rating: rating,
       uploadDate: currentDateTime,
+      lotName: lotName,
+      color: color,
+      imgName: (image as any)?.name || 'image.jpg',
     },
   })
   data.append('pinataMetadata', metadata)
@@ -191,6 +229,18 @@ export const action = async ({ request }: any) => {
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
+}
+
+const getFilesFromPinata = async (color) => {
+  const response = await axios.get(
+    'https://api.pinata.cloud/data/pinList?metadata[keyvalues]={"color":{"value":"green", "op": "eq"}}',
+    {
+      headers: {
+        pinata_api_key: PINATA_API_KEY,
+        pinata_secret_api_key: PINATA_SECRET_API_KEY,
+      },
+    }
+  )
 }
 
 async function handleUpload(file: any) {

@@ -52,12 +52,15 @@ export const loader = async () => {
 
   try {
     // Make the GET request to Pinata
-    const response = await axios.get('https://api.pinata.cloud/data/pinList', {
-      headers: {
-        pinata_api_key: PINATA_API_KEY,
-        pinata_secret_api_key: PINATA_SECRET_API_KEY,
-      },
-    })
+    const response = await axios.get(
+      'https://api.pinata.cloud/data/pinList?metadata[keyvalues]={"color":{"value":"green", "op": "eq"}}',
+      {
+        headers: {
+          pinata_api_key: PINATA_API_KEY,
+          pinata_secret_api_key: PINATA_SECRET_API_KEY,
+        },
+      }
+    )
 
     console.log('Response received')
 

@@ -56,12 +56,10 @@ const Map: React.FC<Props> = ({
         y={val.y}
         scale={scale}
         onClick={() => {
-          console.log('Activa')
           setLotName(lotID)
           setSidebarActive(true)
           setSidebarTimeout(true)
           setTimeout(() => {
-            console.log(sidebarTimeout)
             setSidebarTimeout(false)
           }, 400)
         }}

@@ -20,7 +20,7 @@ const SidebarContainerDesktop: React.FC<Props> = ({
   sidebarActive,
   setSidebarActive,
 }) => {
-  const [{ x }, api] = useSpring(() => ({ x: -WIDTH }))
+  const [{ x }, api] = useSpring(() => ({ x: -WIDTH - 100 }))
 
   useEffect(() => {
     if (sidebarActive) {

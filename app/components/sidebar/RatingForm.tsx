@@ -44,7 +44,7 @@ const RatingForm: React.FC<Props> = ({ color, lotName }) => {
     >
       <h2 className="font-medium">Add a rating</h2>
       <StarRating setRating={setRating} rating={rating} size={34} />
-      <input type="hidden" name="color" value={lotName}></input>
+      <input type="hidden" name="lotName" value={lotName}></input>
       <input type="hidden" name="color" value={color}></input>
       <input type="hidden" name="rating" value={rating ?? ''} />
       <input
