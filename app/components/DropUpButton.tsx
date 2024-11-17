@@ -1,7 +1,7 @@
 // ~/components/BDUnoopprttu.tsx
 import { Link } from '@remix-run/react'
 import { useState, useEffect, useRef } from 'react'
-import { FaInfoCircle, FaCar, FaEnvelope, FaGithub } from 'react-icons/fa'
+import { FaInfoCircle, FaCar, FaEnvelope, FaGithub, FaHome } from 'react-icons/fa' // Import FaHome
 
 const DropUpButton = ({ pageType }: any) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -46,7 +46,7 @@ const DropUpButton = ({ pageType }: any) => {
     >
       <button
         onClick={toggleMenu}
-        className={`w-14 h-14 bg-blue-500 text-white rounded-full flex flex-col justify-center items-center transition-transform duration-300 ease-in-out ${
+        className={`w-14 h-14 bg-gray-500 text-white rounded-full flex flex-col justify-center items-center transition-transform duration-300 ease-in-out ${
           isOpen ? 'transform rotate-90' : ''
         } focus:outline-none`}
         aria-haspopup="true"
@@ -79,6 +79,8 @@ const DropUpButton = ({ pageType }: any) => {
           role="menu"
           className="absolute bottom-20 right-0 bg-white shadow-lg rounded-lg flex flex-col items-center space-y-2 p-2 animate-fadeIn"
         >
+          
+
           {/* About Us */}
           <Link
             to="/AboutUs"
@@ -102,7 +104,7 @@ const DropUpButton = ({ pageType }: any) => {
 
           {/* Contact Us */}
           <Link
-            to="/"
+            to="/Contact" // Updated route to avoid conflict with Home
             className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
             aria-label="Contact Us"
           >
@@ -120,6 +122,14 @@ const DropUpButton = ({ pageType }: any) => {
           >
             <FaGithub size={20} className="text-blue-500" />
           </button>
+          {/* Home */}
+          <Link
+            to="/"
+            className="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+            aria-label="Home"
+          >
+            <FaHome size={20} className="text-blue-500" />
+          </Link>
         </div>
       )}
     </div>

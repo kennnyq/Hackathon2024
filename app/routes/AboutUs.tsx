@@ -6,31 +6,31 @@ const About: FC = () => {
   const teamMembers = [
     {
       name: 'Kenny Quach',
-      role: 'Frontend Developer',
+      role: 'Lead Developer',
       description: '',
       image: '/images//kenny-headshot.jpeg',
-      education: 'Basically Gandalf',
+      education: '',
     },
     {
       name: 'Yash Baruah',
-      role: 'Backend Developer',
+      role: 'Frontend Developer',
       description: '',
       image: '/images//yash-headshot.jpeg',
-      education: 'Did some stuff',
+      education: '',
     },
     {
       name: 'Sanjay Bharathi',
       role: 'UI/UX Designer',
       description: '',
       image: '/images//sanjay-headshot.jpg',
-      education: 'Map Maker',
+      education: 'Designed and Coordinated Frontend',
     },
     {
       name: 'Saarim Syed',
-      role: 'Team Coordinator',
+      role: 'Backend Developer',
       description: '',
       image: '/images//saarim-headshot.jpeg',
-      education: 'Homework Doer',
+      education: 'Researched and Integrated APIs',
     },
   ]
 
