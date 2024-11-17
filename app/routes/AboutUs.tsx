@@ -1,34 +1,35 @@
 import type { FC } from 'react'
 import DropUpButton from '~/components/DropUpButton' // Import the DropUpButton
 
+
 const About: FC = () => {
   const teamMembers = [
     {
       name: 'Kenny Quach',
       role: 'Frontend Developer',
       description: '',
-      image: 'https://via.placeholder.com/150',
+      image: '/images//kenny-headshot.jpeg',
       education: 'Basically Gandalf',
     },
     {
       name: 'Yash Baruah',
       role: 'Backend Developer',
       description: '',
-      image: 'https://via.placeholder.com/150',
+      image: '/images//yash-headshot.jpeg',
       education: 'Did some stuff',
     },
     {
       name: 'Sanjay Bharathi',
       role: 'UI/UX Designer',
       description: '',
-      image: 'https://via.placeholder.com/150',
+      image: '/images//sanjay-headshot.jpg',
       education: 'Map Maker',
     },
     {
       name: 'Saarim Syed',
       role: 'Team Coordinator',
       description: '',
-      image: 'https://via.placeholder.com/150',
+      image: '/images//saarim-headshot.jpeg',
       education: 'Homework Doer',
     },
   ]
