@@ -18,16 +18,53 @@ export function uuidv4() {
   )
 }
 
-export function getLotImages() {
-  // Get lot
-  // Get color from pinata data
-  // Array of valid files
-  // Image exists
-  // imgName !== "null"
-  // Get hash keys
-  // .jpeg .jpg .png
-  // sorted by time
-  // [image hash 1, image hash 2, image hash 3]
-  // input Pinata Data
-  // Outputs {hash: hashes, rating: rating} sorted by date
+export function filterAndSortPinataData(givenLot, givenColor, pinataData) {
+  // Initialize an empty array to store the matching objects
+  const matchingObjects = [];
+
+  // Loop through each object in the PinataData array
+  for (const item of pinataData) {
+      const keyvalues = item.metadata.keyvalues || {};
+
+      // Skip the object if imgName is null or undefined
+      if (keyvalues.imgName === null || keyvalues.imgName === undefined) {
+          continue;
+      }
+
+      // Check if lotName and color match the given ones
+      if (keyvalues.lotName !== givenLot || keyvalues.color !== givenColor) {
+          continue;
+      }
+
+      // Check if a file exists and if it's a png, jpg, or jpeg
+      const fileName = keyvalues.imgName;
+      if (!fileName) {
+          continue;
+      }
+
+      const extension = fileName.split('.').pop().toLowerCase();
+      if (!['png', 'jpg', 'jpeg'].includes(extension)) {
+          continue;
+      }
+
+      // All conditions met, add the object to the matchingObjects array
+      matchingObjects.push({
+          ipfs_pin_hash: item.ipfs_pin_hash,
+          imgName: fileName,
+          rating: keyvalues.rating || null,
+          date_pinned: new Date(item.date_pinned)
+      });
+  }
+
+  // Sort the matching objects by date_pinned (ascending: oldest to newest)
+  matchingObjects.sort((a, b) => a.date_pinned - b.date_pinned);
+
+  // Output the sorted objects with required values
+  const output = matchingObjects.map(obj => ({
+      ipfs_pin_hash: obj.ipfs_pin_hash,
+      imgName: obj.imgName,
+      rating: obj.rating
+  }));
+
+  return output;
 }
